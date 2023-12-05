@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { from } from 'rxjs';
-import { map, mergeMap, toArray } from 'rxjs/operators';
 import { CustomerEntity } from './entities/customer.entity';
 import { PrismaService } from '@/shared/prisma.service';
+import { Gender } from '@prisma/client';
 
 @Injectable()
 export class CustomerService {
@@ -26,6 +26,24 @@ export class CustomerService {
         include: {
           birthDay: true,
         },
+      }),
+    );
+  }
+
+  generateCongratulationMessageV2(): Observable<string> {
+    return this.getTodayBirthdayCustomers().pipe(
+      map((customers) => {
+        const maleMessages =
+          'We offer special discount 20% off for the following items:\nWhite Wine, iPhone X';
+        const femaleMessages =
+          'We offer special discount 50% off for the following items:\nCosmetic, LV Handbags';
+        const titleMessages = 'Subject: Happy birthday!\nHappy birthday, dear ';
+        const messages = customers.map((customer) => {
+          return `${titleMessages}${customer.firstName}!\n${
+            customer.gender == Gender.MALE ? maleMessages : femaleMessages
+          }`;
+        });
+        return messages.join('\n');
       }),
     );
   }

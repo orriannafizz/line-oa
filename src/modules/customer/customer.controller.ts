@@ -11,4 +11,9 @@ export class CustomerController {
   getTodayBirthdayCustomers(): Observable<CustomerEntity[]> {
     return this.customerService.getTodayBirthdayCustomers();
   }
+
+  @Get('message/version2')
+  generateCongratulationMessageV2(): Observable<string> {
+    return this.customerService.generateCongratulationMessageV2();
+  }
 }

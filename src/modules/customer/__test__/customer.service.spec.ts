@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CustomerService } from '../customer.service';
 import { PrismaService } from '@/shared/prisma.service';
 import { customerStubs } from './stubs';
+import { of } from 'rxjs';
 
 describe('CustomerService', () => {
   let service: CustomerService;
@@ -30,7 +31,6 @@ describe('CustomerService', () => {
     jest
       .spyOn(prismaService.customer, 'findMany')
       .mockResolvedValue(customerStubs);
-
     service.getTodayBirthdayCustomers().subscribe({
       next: (customers) => {
         expect(customers).toEqual(customerStubs);
@@ -49,6 +49,23 @@ describe('CustomerService', () => {
         done();
       },
       error: done,
+    });
+  });
+
+  it('should generate congratulation messages for today birthday customers', (done) => {
+    jest
+      .spyOn(service, 'getTodayBirthdayCustomers')
+      .mockReturnValue(of(customerStubs));
+
+    service.generateCongratulationMessageV2().subscribe({
+      next: (message) => {
+        expect(message).toContain('Happy birthday, dear');
+        expect(message).toContain('Subject: Happy birthday!');
+        expect(message).toContain('White Wine, iPhone X');
+        expect(message).toContain('Cosmetic, LV Handbags');
+        done();
+      },
+      error: (err) => done.fail(`Test failed due to error: ${err}`),
     });
   });
 });

@@ -1,5 +1,10 @@
 # ![Line](https://line.me/static/c5bc5abac963fd619ec6d22240641a90/621c6/icon-line.png) Line
 
+## Overview
+
+- Implement a api API with NestJS <img src="https://nestjs.com/img/logo_text.svg" width="100" height="100" /> + Prisma <img src="https://prismalens.vercel.app/header/prisma-logo.svg" width="50" height="50" />
+- Use Github Action to send CI result to line bot
+
 ## Folder Structure
 
 ```

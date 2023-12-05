@@ -15,7 +15,7 @@ describe('CustomerService', () => {
           provide: PrismaService,
           useValue: {
             customer: {
-              findMany: jest.fn(),
+              findMany: jest.fn().mockResolvedValue(customerStubs),
             },
           },
         },
@@ -27,10 +27,6 @@ describe('CustomerService', () => {
   });
 
   it('should return a value that matches the stub data', (done) => {
-    jest
-      .spyOn(prismaService.customer, 'findMany')
-      .mockResolvedValue(customerStubs);
-
     service.getTodayBirthdayCustomers().subscribe({
       next: (customers) => {
         expect(customers).toEqual(customerStubs);
@@ -46,6 +42,23 @@ describe('CustomerService', () => {
     service.getTodayBirthdayCustomers().subscribe({
       next: (customers) => {
         expect(customers).toEqual([]);
+        done();
+      },
+      error: done,
+    });
+  });
+
+  it("should generate congratulation messages for today's birthday customers", (done) => {
+    service.generateCongratulationMessageV4().subscribe({
+      next: (message) => {
+        const expectedMessage = customerStubs
+          .map(
+            (customer) =>
+              `Subject: Happy birthday!\n Happy birthday, dear ${customer.firstName}, ${customer.lastName}!`,
+          )
+          .join('\n');
+
+        expect(message).toEqual(expectedMessage);
         done();
       },
       error: done,

@@ -2,8 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CustomerController } from '../customer.controller';
 import { CustomerService } from '../customer.service';
 import { customerStubs } from './stubs';
-import { Observable, of } from 'rxjs';
-import { CustomerEntity } from '../entities/customer.entity';
+import { of } from 'rxjs';
 import { PrismaService } from '@/shared/prisma.service';
 
 describe('CustomerController unit test', () => {
@@ -12,11 +11,10 @@ describe('CustomerController unit test', () => {
 
   beforeEach(async () => {
     const mockCustomerService = {
-      getTodayBirthdayCustomers: jest
+      getTodayBirthdayCustomers: jest.fn().mockReturnValue(of(customerStubs)),
+      generateCongratulationMessageV4: jest
         .fn()
-        .mockImplementation(
-          (): Observable<CustomerEntity[]> => of(customerStubs),
-        ),
+        .mockReturnValue(of('mocked message')),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -33,15 +31,7 @@ describe('CustomerController unit test', () => {
     customerService = module.get<CustomerService>(CustomerService);
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
-
-  it('should return a value that matches the stub data', (done) => {
+  it("should return today's birthday customers", (done) => {
     controller.getTodayBirthdayCustomers().subscribe({
       next: (customers) => {
         expect(customers).toEqual(customerStubs);
@@ -49,22 +39,18 @@ describe('CustomerController unit test', () => {
       },
       error: done,
     });
+    expect(customerService.getTodayBirthdayCustomers).toHaveBeenCalled();
   });
 
-  it("version1 generator should generate congratulation messages for today's birthday customers", (done) => {
-    // Mock the getTodayBirthdayCustomers method to return a predefined array of customers
-    const mockCustomers: CustomerEntity[] = customerStubs;
-    jest
-      .spyOn(customerService, 'getTodayBirthdayCustomers')
-      .mockReturnValue(of(mockCustomers));
-
-    controller.generateCongratulationMessageV1().subscribe((message) => {
-      expect(message).toContain(
-        `Happy birthday! ${mockCustomers[0].firstName}!`,
-      );
-
-      done();
+  it('should generate congratulation message', (done) => {
+    controller.generateCongratulationMessageV4().subscribe({
+      next: (message) => {
+        expect(message).toEqual('mocked message');
+        done();
+      },
+      error: done,
     });
+    expect(customerService.generateCongratulationMessageV4).toHaveBeenCalled();
   });
 });
 
@@ -96,23 +82,37 @@ describe('CustomerController integration test', () => {
     controller.getTodayBirthdayCustomers().subscribe((customers) => {
       // check if customers is an array and has more than 1 item
       expect(Array.isArray(customers)).toBe(true);
-      expect(customers.length).toBeGreaterThan(1);
-
-      // check attributes of customer
-      expect(customers[0].firstName).toBeDefined();
-      expect(customers[0].lastName).toBeDefined();
-      expect(customers[0].email).toBeDefined();
-      expect(customers[0].gender).toBeDefined();
+      expect(customers.length).toBeGreaterThan(0);
 
       // check birthDay if it is today's date
       const date = new Date();
       const month = date.getMonth() + 1;
       const day = date.getDate();
 
-      expect(customers[0].birthDay.month).toBe(month);
-      expect(customers[0].birthDay.day).toBe(day);
+      customers.forEach((customer) => {
+        expect(customer).toHaveProperty('firstName');
+        expect(customer).toHaveProperty('lastName');
+        expect(customer).toHaveProperty('email');
+        expect(customer).toHaveProperty('gender');
+
+        // Check if birthDay is today's date
+        expect(customer.birthDay.month).toBe(month);
+        expect(customer.birthDay.day).toBe(day);
+      });
 
       done();
+    });
+  });
+
+  it('should generate congratulation message', (done) => {
+    controller.generateCongratulationMessageV4().subscribe({
+      next: (message) => {
+        expect(typeof message).toBe('string');
+        expect(message).toContain('Happy birthday');
+        expect(message).toContain('dear');
+        done();
+      },
+      error: done,
     });
   });
 });

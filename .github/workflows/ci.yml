@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: 'mysql://nlnl:nlnl@mysql:3306/nlnl'
+      DATABASE_URL: 'mysql://nlnl:nlnl@localhost:3306/nlnl'
 
     strategy:
       matrix:

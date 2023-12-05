@@ -1,73 +1,178 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# ![Line](https://line.me/static/c5bc5abac963fd619ec6d22240641a90/621c6/icon-line.png) Line
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Folder Structure
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ yarn install
+```
+.
+├── README.md
+├── docker-compose.yaml # docker of PostgreSQL DB
+├── nest-cli.json
+├── package.json
+├── prisma
+│   ├── schema.prisma # prisma schema
+│   └── seed
+│       ├── data.ts # seed data
+│       └── index.ts # init database script
+├── src
+│   ├── app.controller.spec.ts
+│   ├── app.controller.ts
+│   ├── app.module.ts
+│   ├── app.service.ts
+│   ├── common
+│   │   ├── filters
+│   │   │   ├── http-exception.filter.ts # HTTP-exception filter
+│   │   │   └── http-exception.spec.ts
+│   │   ├── index.ts
+│   │   ├── intercepters
+│   │   │   ├── transform.interceptor.ts # interceptor
+│   │   │   └── transform.spec.ts
+│   │   └── middlewares
+│   │       ├── logger.middleware.spec.ts
+│   │       └── logger.middleware.ts # logger
+│   ├── main.ts
+│   ├── modules
+│   │   └── customer
+│   │       ├── __test__
+│   │       │   ├── customer.controller.spec.ts # unit and integration test for customer.controller.ts
+│   │       │   ├── customer.service.spec.ts # unit test for customer.service.ts
+│   │       │   └── stubs # fake data for testing
+│   │       │       ├── customer.stub.ts
+│   │       │       └── index.ts
+│   │       ├── customer.controller.ts
+│   │       ├── customer.module.ts
+│   │       ├── customer.service.ts
+│   │       ├── dto # data transform object
+│   │       │   └── birthday-message-v6.dto.ts
+│   │       └── entities # entities that implements prisma object
+│   │           ├── birthday.entity.ts
+│   │           └── customer.entity.ts
+│   └── shared
+│       ├── __test__
+│       │   └── prisma.spec.ts # unit test fot prisma.service.ts
+│       └── prisma.service.ts # Injectable prisma service
+├── test
+│   ├── app.e2e-spec.ts
+│   └── jest-e2e.json
+├── tsconfig.build.json
+├── tsconfig.json
+└── yarn.lock
 ```
 
-## Running the app
+## Branch
 
-```bash
-# development
-$ yarn run start
+### version1
 
-# watch mode
-$ yarn run start:dev
+- req:`GET` `http://localhost:3000/api/v0/customer/message/version1`
+- res:
 
-# production mode
-$ yarn run start:prod
+```json
+{
+  "statusCode": 200,
+  "message": "Success",
+  "data": "Subject: Happy birthday!\n Happy birthday, dear Robert!\nSubject: Happy birthday!\n Happy birthday, dear Sherry!",
+  "timestamp": "2023-12-05T10:18:07.403Z"
+}
 ```
 
-## Test
+### version2
 
-```bash
-# unit tests
-$ yarn run test
+- req:`GET` `http://localhost:3000/api/v0/customer/message/version2`
+- res:
 
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+```json
+{
+  "statusCode": 200,
+  "message": "Success",
+  "data": "Subject: Happy birthday!\nHappy birthday, dear Robert!\nWe offer special discount 20% off for the following items:\nWhite Wine, iPhone X\nSubject: Happy birthday!\nHappy birthday, dear Sherry!\nWe offer special discount 50% off for the following items:\nCosmetic, LV Handbags",
+  "timestamp": "2023-12-05T10:19:28.722Z"
+}
 ```
 
-## Support
+### version3
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- Assume that Robert is older than 49
+- req:`GET` `http://localhost:3000/api/v0/customer/message/version3`
+- res:
 
-## Stay in touch
+```json
+{
+  "statusCode": 200,
+  "message": "Success",
+  "data": "Subject: Happy birthday! Happy birthday, dear `Robert`!\n![Happy Birthday](https://tonsofthanks.com/wp-content/uploads/2023/08/Hot-Dog-Funny-Birthday-Meme.jpg)\nSubject: Happy birthday! Happy birthday, dear `Sherry`!\n",
+  "timestamp": "2023-12-05T10:21:27.487Z"
+}
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### version4
 
-## License
+- req:`GET` `http://localhost:3000/api/v0/customer/message/version4`
+- res:
 
-Nest is [MIT licensed](LICENSE).
+```json
+{
+  "statusCode": 200,
+  "message": "Success",
+  "data": "Subject: Happy birthday!\n Happy birthday, dear Yen, Robert!\nSubject: Happy birthday!\n Happy birthday, dear Chang, Sherry!",
+  "timestamp": "2023-12-05T10:20:25.509Z"
+}
+```
+
+### version5
+
+- req:`GET` `http://localhost:3000/api/v0/customer/message/version5`
+- res:
+
+```json
+{
+  "statusCode": 200,
+  "message": "Success",
+  "data": "Subject: Happy birthday! Robert!\n\nSubject: Happy birthday! Sherry!",
+  "timestamp": "2023-12-05T10:23:48.075Z"
+}
+```
+
+- Original DB: PostgreSQL
+- Version5 DB: MySQL
+
+### version6
+
+- req:`GET` `http://localhost:3000/api/v0/customer/message/version6/json`
+- res:
+
+```json
+{
+  "statusCode": 200,
+  "message": "Success",
+  "data": [
+    {
+      "title": "Subject: Happy birthday!",
+      "content": "Happy birthday, dear Robert!"
+    },
+    {
+      "title": "Subject: Happy birthday!",
+      "content": "Happy birthday, dear Sherry!"
+    }
+  ],
+  "timestamp": "2023-12-05T10:26:37.364Z"
+}
+```
+
+- req:`GET` `http://localhost:3000/api/v0/customer/message/version6/xml`
+- res:
+
+```json
+{
+  "statusCode": 200,
+  "message": "Success",
+  "data": "<root>\n<title>Subject: Happy birthday!</title>\n  <content>Happy birthday, dear Robert!</content>\n<title>Subject: Happy birthday!</title>\n  <content>Happy birthday, dear Sherry!</content>\n</root>",
+  "timestamp": "2023-12-05T10:27:10.670Z"
+}
+```
+
+## Extra Feature
+
+### branch `master`
+
+- github action will notificate me the ci result via line
+
+  ![Line bot picture](/static/ci_message.png)

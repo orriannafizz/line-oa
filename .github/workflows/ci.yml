@@ -46,6 +46,8 @@ jobs:
       - name: Extract branch name
         id: extract_branch
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "BUILD_STATUS=${{ job.status }}" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:%s)" >> $GITHUB_ENV
         shell: bash
       - name: Send result to Line Bot
         run: ./test/result_sender.sh
@@ -60,3 +62,5 @@ jobs:
           RUN_NUMBER: ${{ github.run_number }}
           WORKFLOW_NAME: ${{ github.workflow }}
           EVENT_NAME: ${{ github.event_name }}
+          BUILD_STATUS: ${{ env.BUILD_STATUS }}
+          COMMIT_MESSAGE: ${{ env.COMMIT_MESSAGE }}

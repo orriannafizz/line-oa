@@ -109,7 +109,7 @@ MESSAGE='{
             "size": "sm",
             "color": "#555555",
             "margin": "sm"
-          },
+          }
         ]
       },
       {

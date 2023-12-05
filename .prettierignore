@@ -1,0 +1,4 @@
+package.json
+.git/
+__generated__/
+.gitignore

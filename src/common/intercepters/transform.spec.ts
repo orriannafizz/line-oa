@@ -13,7 +13,6 @@ describe('TransformResponseInterceptor', () => {
         }),
         getRequest: () => ({}),
       }),
-      // ...其他方法根据需要模拟...
     } as any;
 
     const mockCallHandler: CallHandler = {

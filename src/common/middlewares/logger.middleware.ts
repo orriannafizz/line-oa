@@ -7,7 +7,6 @@ export class LoggerMiddleware implements NestMiddleware {
   use(req: any, res: any, next: () => void) {
     const { method, originalUrl, body, query } = req;
 
-    // 构建一个结构化的日志消息
     const logMessage = {
       message: `Request received`,
       method,
@@ -16,13 +15,13 @@ export class LoggerMiddleware implements NestMiddleware {
       query: this.safeStringify(query),
     };
 
-    // 记录一条日志
+    // Log the request
     this.logger.log(logMessage);
 
     next();
   }
 
-  // 安全地将对象转换为 JSON 字符串
+  // Transform the object into a string to prevent circular references
   private safeStringify(obj: any): string {
     try {
       return JSON.stringify(obj);

@@ -5,6 +5,7 @@ import { customerStubs } from './stubs';
 import { Observable, of } from 'rxjs';
 import { CustomerEntity } from '../entities/customer.entity';
 import { PrismaService } from '@/shared/prisma.service';
+import { BirthdayMessageDTO } from '../dto/birthday-message-v6.dto';
 
 describe('CustomerController unit test', () => {
   let controller: CustomerController;
@@ -48,6 +49,62 @@ describe('CustomerController unit test', () => {
         done();
       },
       error: done,
+    });
+  });
+
+  it("version6 generator should generate congratulation messages for today's birthday customers", (done) => {
+    // Mock the getTodayBirthdayCustomers method to return a predefined array of customers
+    const mockCustomers: CustomerEntity[] = customerStubs;
+    jest
+      .spyOn(customerService, 'getTodayBirthdayCustomers')
+      .mockReturnValue(of(mockCustomers));
+
+    controller.generateCongratulationMessageV6().subscribe((messages) => {
+      const expectedMessages: BirthdayMessageDTO[] = mockCustomers.map(
+        (customer) => ({
+          title: 'Subject: Happy birthday!',
+          content: `Happy birthday, dear ${customer.firstName}!`,
+        }),
+      );
+
+      expectedMessages.forEach((expectedMessage) => {
+        expect(messages).toContainEqual(expectedMessage);
+      });
+
+      done();
+    });
+  });
+
+  it("version6 generator should generate XML congratulation messages for today's birthday customers", (done) => {
+    // Mock the getTodayBirthdayCustomers method to return a predefined array of customers
+    const mockCustomers: CustomerEntity[] = customerStubs;
+    jest
+      .spyOn(customerService, 'getTodayBirthdayCustomers')
+      .mockReturnValue(of(mockCustomers));
+
+    // Call the method to generate XML messages
+    controller.generateCongratulationMessagesXml().subscribe((xmlMessages) => {
+      // Build the expected XML string for each customer
+      const expectedXmlMessages = mockCustomers
+        .map((customer) => {
+          return `
+    <title>Subject: Happy birthday!</title>
+    <content>Happy birthday, dear ${customer.firstName}!</content>
+        `.trim();
+        })
+        .join('');
+
+      // Wrap messages with the root element
+      const expectedXml = `<root>${expectedXmlMessages}</root>`;
+
+      // Remove all whitespace for the comparison to avoid issues with indentation and line breaks
+      const actualXmlWithoutWhitespace = xmlMessages.replace(/\s/g, '');
+      const expectedXmlWithoutWhitespace = expectedXml.replace(/\s/g, '');
+
+      // Expect the actual XML to match the expected XML
+      expect(actualXmlWithoutWhitespace).toBe(expectedXmlWithoutWhitespace);
+
+      done();
     });
   });
 });

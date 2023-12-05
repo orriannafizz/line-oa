@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
+import { HttpExceptionFilter } from '@/common';
 
 // BigInt support for JSON.stringify
 BigInt.prototype['toJSON'] = function () {
@@ -14,6 +15,7 @@ async function bootstrap() {
   const apiPort = configService.get('API_PORT') || 3000;
 
   app.setGlobalPrefix(`api/${apiVersion}`);
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(apiPort);
 }

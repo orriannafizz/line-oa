@@ -59,8 +59,11 @@ describe('CustomerController unit test', () => {
       .mockReturnValue(of(mockCustomers));
 
     controller.generateCongratulationMessageV1().subscribe((message) => {
-      console.log(message);
-
+      mockCustomers.forEach((customer) => {
+        expect(message).toContain(
+          `Subject: Happy birthday!\n Happy birthday, dear ${customer.firstName}!`,
+        );
+      });
       done();
     });
   });

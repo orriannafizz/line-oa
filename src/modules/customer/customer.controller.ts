@@ -17,9 +17,9 @@ export class CustomerController {
     return this.customerService.getTodayBirthdayCustomers().pipe(
       map((customers) => {
         const messages = customers.map((customer) => {
-          return `Subject: Happy birthday! ${customer.firstName}!`;
+          return `Subject: Happy birthday!\n Happy birthday, dear ${customer.firstName}!`;
         });
-        return messages.join('\n\n');
+        return messages.join('\n');
       }),
     );
   }

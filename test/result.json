@@ -1,0 +1,310 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 1,
+  "numPassedTestSuites": 6,
+  "numPassedTests": 14,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 0,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 7,
+  "numTotalTests": 15,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1701774170639,
+  "success": false,
+  "testResults": [
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["TransformResponseInterceptor"],
+          "duration": 6,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "TransformResponseInterceptor should transform response",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "should transform response"
+        }
+      ],
+      "endTime": 1701774173166,
+      "message": "",
+      "name": "/Users/enen/Desktop/line-oa/src/common/intercepters/transform.spec.ts",
+      "startTime": 1701774170988,
+      "status": "passed",
+      "summary": ""
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["HttpExceptionFilter"],
+          "duration": 8,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "HttpExceptionFilter should catch an http exception and return the right response",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "should catch an http exception and return the right response"
+        }
+      ],
+      "endTime": 1701774173202,
+      "message": "",
+      "name": "/Users/enen/Desktop/line-oa/src/common/filters/http-exception.spec.ts",
+      "startTime": 1701774170977,
+      "status": "passed",
+      "summary": ""
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["LoggerMiddleware"],
+          "duration": 3,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "LoggerMiddleware should be defined",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "should be defined"
+        }
+      ],
+      "endTime": 1701774173213,
+      "message": "",
+      "name": "/Users/enen/Desktop/line-oa/src/common/middlewares/logger.middleware.spec.ts",
+      "startTime": 1701774170985,
+      "status": "passed",
+      "summary": ""
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["AppController", "root"],
+          "duration": 7,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppController root should return \"Hello World!\"",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "should return \"Hello World!\""
+        }
+      ],
+      "endTime": 1701774173338,
+      "message": "",
+      "name": "/Users/enen/Desktop/line-oa/src/app.controller.spec.ts",
+      "startTime": 1701774170966,
+      "status": "passed",
+      "summary": ""
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["CustomerService"],
+          "duration": 8,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "CustomerService should return a value that matches the stub data",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "should return a value that matches the stub data"
+        },
+        {
+          "ancestorTitles": ["CustomerService"],
+          "duration": 2,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "CustomerService should handle no customers found",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "should handle no customers found"
+        }
+      ],
+      "endTime": 1701774173357,
+      "message": "",
+      "name": "/Users/enen/Desktop/line-oa/src/modules/customer/__test__/customer.service.spec.ts",
+      "startTime": 1701774170966,
+      "status": "passed",
+      "summary": ""
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["PrismaService"],
+          "duration": 149,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "PrismaService should connect when module initializes",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "should connect when module initializes"
+        },
+        {
+          "ancestorTitles": ["PrismaService"],
+          "duration": 8,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "PrismaService should handle connection error",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "should handle connection error"
+        },
+        {
+          "ancestorTitles": ["PrismaService"],
+          "duration": 2,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "PrismaService should disconnect when module is destroyed",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "should disconnect when module is destroyed"
+        }
+      ],
+      "endTime": 1701774173369,
+      "message": "",
+      "name": "/Users/enen/Desktop/line-oa/src/shared/__test__/prisma.spec.ts",
+      "startTime": 1701774170987,
+      "status": "passed",
+      "summary": ""
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["CustomerController unit test"],
+          "duration": 9,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "CustomerController unit test should be defined",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "should be defined"
+        },
+        {
+          "ancestorTitles": ["CustomerController unit test"],
+          "duration": 3,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "CustomerController unit test should return a value that matches the stub data",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "should return a value that matches the stub data"
+        },
+        {
+          "ancestorTitles": ["CustomerController unit test"],
+          "duration": 2,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "CustomerController unit test version6 generator should generate congratulation messages for today's birthday customers",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "version6 generator should generate congratulation messages for today's birthday customers"
+        },
+        {
+          "ancestorTitles": ["CustomerController unit test"],
+          "duration": 1,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "CustomerController unit test version6 generator should generate XML congratulation messages for today's birthday customers",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "version6 generator should generate XML congratulation messages for today's birthday customers"
+        },
+        {
+          "ancestorTitles": ["CustomerController integration test"],
+          "duration": 0,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "CustomerController integration test should be defined",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "status": "passed",
+          "title": "should be defined"
+        },
+        {
+          "ancestorTitles": ["CustomerController integration test"],
+          "duration": 5002,
+          "failureDetails": [
+            {
+              "name": "PrismaClientInitializationError",
+              "clientVersion": "5.6.0"
+            },
+            {
+              "message": "thrown: \"Exceeded timeout of 5000 ms for a test while waiting for `done()` to be called.\nAdd a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout.\""
+            }
+          ],
+          "failureMessages": [
+            "PrismaClientInitializationError: \nInvalid `this.prisma.customer.findMany()` invocation in\n/Users/enen/Desktop/line-oa/src/modules/customer/customer.service.ts:19:28\n\n  16 const day = date.getDate();\n  17 \n  18 return from(\n→ 19   this.prisma.customer.findMany(\nCan't reach database server at `localhost`:`25432`\n\nPlease make sure your database server is running at `localhost`:`25432`.\n    at ni.handleRequestError (/Users/enen/Desktop/line-oa/node_modules/@prisma/client/runtime/library.js:124:7090)\n    at ni.handleAndLogRequestError (/Users/enen/Desktop/line-oa/node_modules/@prisma/client/runtime/library.js:124:6206)\n    at ni.request (/Users/enen/Desktop/line-oa/node_modules/@prisma/client/runtime/library.js:124:5926)\n    at l (/Users/enen/Desktop/line-oa/node_modules/@prisma/client/runtime/library.js:129:10023)",
+            "Error: thrown: \"Exceeded timeout of 5000 ms for a test while waiting for `done()` to be called.\nAdd a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout.\"\n    at /Users/enen/Desktop/line-oa/src/modules/customer/__test__/customer.controller.spec.ts:136:3\n    at _dispatchDescribe (/Users/enen/Desktop/line-oa/node_modules/jest-circus/build/index.js:91:26)\n    at describe (/Users/enen/Desktop/line-oa/node_modules/jest-circus/build/index.js:55:5)\n    at Object.<anonymous> (/Users/enen/Desktop/line-oa/src/modules/customer/__test__/customer.controller.spec.ts:112:1)\n    at Runtime._execModule (/Users/enen/Desktop/line-oa/node_modules/jest-runtime/build/index.js:1439:24)\n    at Runtime._loadModule (/Users/enen/Desktop/line-oa/node_modules/jest-runtime/build/index.js:1022:12)\n    at Runtime.requireModule (/Users/enen/Desktop/line-oa/node_modules/jest-runtime/build/index.js:882:12)\n    at jestAdapter (/Users/enen/Desktop/line-oa/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:77:13)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at runTestInternal (/Users/enen/Desktop/line-oa/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/enen/Desktop/line-oa/node_modules/jest-runner/build/runTest.js:444:34)\n    at Object.worker (/Users/enen/Desktop/line-oa/node_modules/jest-runner/build/testWorker.js:108:12)"
+          ],
+          "fullName": "CustomerController integration test should return who born in 8/8 and it is Observable of CustomerEntity[]",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "status": "failed",
+          "title": "should return who born in 8/8 and it is Observable of CustomerEntity[]"
+        }
+      ],
+      "endTime": 1701774178421,
+      "message": "\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCustomerController integration test › should return who born in 8/8 and it is Observable of CustomerEntity[]\u001b[39m\u001b[22m\n\n    PrismaClientInitializationError: \n    Invalid `this.prisma.customer.findMany()` invocation in\n    /Users/enen/Desktop/line-oa/src/modules/customer/customer.service.ts:19:28\n\n      16 const day = date.getDate();\n      17 \n      18 return from(\n    → 19   this.prisma.customer.findMany(\n    Can't reach database server at `localhost`:`25432`\n\n    Please make sure your database server is running at `localhost`:`25432`.\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat ni.handleRequestError (\u001b[22m\u001b[2m../node_modules/@prisma/client/runtime/library.js\u001b[2m:124:7090)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat ni.handleAndLogRequestError (\u001b[22m\u001b[2m../node_modules/@prisma/client/runtime/library.js\u001b[2m:124:6206)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat ni.request (\u001b[22m\u001b[2m../node_modules/@prisma/client/runtime/library.js\u001b[2m:124:5926)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat l (\u001b[22m\u001b[2m../node_modules/@prisma/client/runtime/library.js\u001b[2m:129:10023)\u001b[22m\u001b[2m\u001b[22m\n\n\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCustomerController integration test › should return who born in 8/8 and it is Observable of CustomerEntity[]\u001b[39m\u001b[22m\n\n    thrown: \"Exceeded timeout of 5000 ms for a test while waiting for `done()` to be called.\n    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout.\"\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 134 |\u001b[39m     expect(controller)\u001b[33m.\u001b[39mtoBeDefined()\u001b[33m;\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 135 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m    \u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 136 |\u001b[39m   it(\u001b[32m'should return who born in 8/8 and it is Observable of CustomerEntity[]'\u001b[39m\u001b[33m,\u001b[39m (done) \u001b[33m=>\u001b[39m {\u001b[0m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m     |\u001b[39m   \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 137 |\u001b[39m     controller\u001b[33m.\u001b[39mgetTodayBirthdayCustomers()\u001b[33m.\u001b[39msubscribe((customers) \u001b[33m=>\u001b[39m {\u001b[0m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 138 |\u001b[39m       \u001b[90m// check if customers is an array and has more than 1 item\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 139 |\u001b[39m       expect(\u001b[33mArray\u001b[39m\u001b[33m.\u001b[39misArray(customers))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2m\u001b[0m\u001b[36mmodules/customer/__test__/customer.controller.spec.ts\u001b[39m\u001b[0m\u001b[2m:136:3\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mmodules/customer/__test__/customer.controller.spec.ts\u001b[39m\u001b[0m\u001b[2m:112:1)\u001b[22m\u001b[2m\u001b[22m\n",
+      "name": "/Users/enen/Desktop/line-oa/src/modules/customer/__test__/customer.controller.spec.ts",
+      "startTime": 1701774170966,
+      "status": "failed",
+      "summary": ""
+    }
+  ],
+  "wasInterrupted": false
+}

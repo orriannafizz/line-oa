@@ -20,41 +20,44 @@
 │   ├── app.service.ts
 │   ├── common
 │   │   ├── filters
-│   │   │   ├── http-exception.filter.ts # HTTP-exception filter
-│   │   │   └── http-exception.spec.ts
+│   │   │   ├── http-exception.filter.ts # Handle http exception
+│   │   │   └── http-exception.spec.ts # unit test for http-exception.filter.ts
 │   │   ├── index.ts
 │   │   ├── intercepters
-│   │   │   ├── transform.interceptor.ts # interceptor
-│   │   │   └── transform.spec.ts
+│   │   │   ├── transform.interceptor.ts # transform response
+│   │   │   └── transform.spec.ts # unit test for transform.interceptor.ts
 │   │   └── middlewares
-│   │       ├── logger.middleware.spec.ts
-│   │       └── logger.middleware.ts # logger
-│   ├── main.ts
+│   │       ├── logger.middleware.spec.ts # unit test for logger.middleware.ts
+│   │       └── logger.middleware.ts # request logger
+│   ├── main.ts # entry point
 │   ├── modules
 │   │   └── customer
 │   │       ├── __test__
 │   │       │   ├── customer.controller.spec.ts # unit and integration test for customer.controller.ts
 │   │       │   ├── customer.service.spec.ts # unit test for customer.service.ts
-│   │       │   └── stubs # fake data for testing
-│   │       │       ├── customer.stub.ts
+│   │       │   └── stubs
+│   │       │       ├── customer.stub.ts # stub data for unit test
 │   │       │       └── index.ts
-│   │       ├── customer.controller.ts
-│   │       ├── customer.module.ts
-│   │       ├── customer.service.ts
-│   │       ├── dto # data transform object
+│   │       ├── customer.controller.ts # customer controller
+│   │       ├── customer.module.ts # customer module
+│   │       ├── customer.service.ts # customer service
+│   │       ├── dto # dto for customer
 │   │       │   └── birthday-message-v6.dto.ts
-│   │       └── entities # entities that implements prisma object
+│   │       └── entities # entities for customer and birthday
 │   │           ├── birthday.entity.ts
 │   │           └── customer.entity.ts
 │   └── shared
 │       ├── __test__
-│       │   └── prisma.spec.ts # unit test fot prisma.service.ts
-│       └── prisma.service.ts # Injectable prisma service
+│       │   └── prisma.spec.ts # unit test for prisma.service.ts
+│       └── prisma.service.ts # prisma service
+├── static
+│   └── ci_message.png # line bot ci message picture
 ├── test
-│   ├── app.e2e-spec.ts
-│   └── jest-e2e.json
+│   ├── app.e2e-spec.ts # e2e test
+│   ├── jest-e2e.json # jest config for e2e test
+│   └── result_sender.sh # send test result to line bot bash script
 ├── tsconfig.build.json
-├── tsconfig.json
+├── tsconfig.json # typescript config
 └── yarn.lock
 ```
 

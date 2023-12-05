@@ -39,3 +39,9 @@ lerna-debug.log*
 
 # env
 .env
+
+# test results
+test/result.json
+
+# secrets
+.secrets

@@ -1,3 +1,3 @@
-DATABASE_URL="postgresql://nlnl:nlnl@localhost:25432/nlnl?schema=public"
+DATABASE_URL="mysql://nlnl:nlnl@localhost:3306/nlnl"
 API_VERSION="v0"
 API_PORT=3000

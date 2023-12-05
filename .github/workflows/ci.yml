@@ -10,23 +10,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: 'postgresql://nlnl:nlnl@localhost:25432/nlnl'
+      DATABASE_URL: 'mysql://nlnl:nlnl@mysql:3306/nlnl'
 
     strategy:
       matrix:
         node-version: [20.x]
 
     services:
-      postgres:
-        image: postgres:16
+      mysql:
+        image: mysql:8.0
         env:
-          POSTGRES_USER: nlnl
-          POSTGRES_PASSWORD: nlnl
-          POSTGRES_DB: nlnl
+          MYSQL_ROOT_PASSWORD: nlnl
+          MYSQL_DATABASE: nlnl
+          MYSQL_USER: nlnl
+          MYSQL_PASSWORD: nlnl
         ports:
-          - 25432:5432
+          - 3306:3306
         options: >-
-          --health-cmd pg_isready
+          --health-cmd='mysqladmin ping --silent'
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5

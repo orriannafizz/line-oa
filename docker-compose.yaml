@@ -1,15 +1,17 @@
 version: '3'
 services:
-  postgres:
-    image: postgres:16
-    container_name: line-postgres
+  mysql:
+    image: mysql:8.0
+    container_name: line-mysql
     restart: always
     environment:
-      POSTGRES_USER: nlnl
-      POSTGRES_PASSWORD: nlnl
-      POSTGRES_DB: nlnl
+      MYSQL_ROOT_PASSWORD: nlnl
+      MYSQL_USER: nlnl
+      MYSQL_PASSWORD: nlnl
+      MYSQL_DATABASE: nlnl
       TZ: Asia/Taipei
     ports:
-      - 25432:5432
+      - 3306:3306
     volumes:
-      - ./docker/data/postgresql/:/var/lib/postgresql/data
+      - ./docker/data/mysql/:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password

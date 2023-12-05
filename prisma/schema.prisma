@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  UNKNOWN
+}
+
+model Customer {
+  id         BigInt   @id @default(autoincrement()) @db.BigInt
+  firstName  String
+  lastName   String
+  gender     Gender
+  email      String   @unique
+  birthDayId Int
+  birthDay   BirthDay @relation(fields: [birthDayId], references: [id])
+
+  @@map("customer")
+}
+
+model BirthDay {
+  id       Int        @id @default(autoincrement())
+  year     Int        @db.SmallInt
+  month    Int        @db.SmallInt
+  day      Int        @db.SmallInt
+  customer Customer[]
+
+  @@unique([year, month, day], name: "birth_day_date")
+  @@index([month, day], name: "birth_day_month_day")
+  @@map("birth_day")
+}

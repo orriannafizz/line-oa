@@ -1,0 +1,15 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:16
+    container_name: line-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: nlnl
+      POSTGRES_PASSWORD: nlnl
+      POSTGRES_DB: nlnl
+      TZ: Asia/Taipei
+    ports:
+      - 25432:5432
+    volumes:
+      - ./docker/data/postgresql/:/var/lib/postgresql/data

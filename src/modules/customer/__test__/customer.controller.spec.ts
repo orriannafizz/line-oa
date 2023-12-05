@@ -50,6 +50,20 @@ describe('CustomerController unit test', () => {
       error: done,
     });
   });
+
+  it("version1 generator should generate congratulation messages for today's birthday customers", (done) => {
+    // Mock the getTodayBirthdayCustomers method to return a predefined array of customers
+    const mockCustomers: CustomerEntity[] = customerStubs;
+    jest
+      .spyOn(customerService, 'getTodayBirthdayCustomers')
+      .mockReturnValue(of(mockCustomers));
+
+    controller.generateCongratulationMessageV1().subscribe((message) => {
+      console.log(message);
+
+      done();
+    });
+  });
 });
 
 describe('CustomerController integration test', () => {

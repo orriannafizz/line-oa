@@ -22,11 +22,11 @@ GREEN_COLOR="#4BB543"
 RED_COLOR="#D0342C"  
 
 if [[ "$IS_SUCCESS" == "true" ]]; then
-    TITLE_TEXT="Test Results - Success 🎉"
+    TITLE_TEXT="Test - Success 🎉"
     FAIL_TEXT_COLOR="#55555"
     TITLE_COLOR=$GREEN_COLOR 
 else
-    TITLE_TEXT="Test Results - Failure 👎"
+    TITLE_TEXT="Test - Failure 👎"
     FAIL_TEXT_COLOR="#D0342C"
     TITLE_COLOR=$RED_COLOR  
 fi
@@ -61,8 +61,6 @@ MESSAGE='{
         "type": "separator",
         "margin": "md"
       },
-
- 
       {
         "type": "box",
         "layout": "vertical",
@@ -112,25 +110,11 @@ MESSAGE='{
             "color": "#555555",
             "margin": "sm"
           },
-          {
-            "type": "text",
-            "text": "Build Status: '"$BUILD_STATUS"'",
-            "size": "sm",
-            "color": "#555555",
-            "margin": "sm"
-          },
-          {
-            "type": "text",
-            "text": "Commit message: '"$COMMIT_MESSAGE"'",
-            "size": "sm",
-            "color": "#555555",
-            "margin": "sm"
-          }
         ]
       },
       {
         "type": "separator",
-        "margin": "xl"
+        "margin": "md"
       },
       {
         "type": "box",

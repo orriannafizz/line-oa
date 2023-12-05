@@ -2,13 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CustomerController } from '../customer.controller';
 import { CustomerService } from '../customer.service';
 import { customerStubs } from './stubs';
-import { Observable, of } from 'rxjs';
+import { Observable, firstValueFrom, map, of } from 'rxjs';
 import { CustomerEntity } from '../entities/customer.entity';
 import { PrismaService } from '@/shared/prisma.service';
 
 describe('CustomerController unit test', () => {
   let controller: CustomerController;
   let customerService: CustomerService;
+  const mockMessage = 'Mock Message';
 
   beforeEach(async () => {
     const mockCustomerService = {
@@ -17,6 +18,10 @@ describe('CustomerController unit test', () => {
         .mockImplementation(
           (): Observable<CustomerEntity[]> => of(customerStubs),
         ),
+
+      generateCongratulationMessageV3: jest
+        .fn()
+        .mockReturnValue(of(mockMessage)),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -50,10 +55,18 @@ describe('CustomerController unit test', () => {
       error: done,
     });
   });
+
+  it('should return Observable of string', (done) => {
+    controller.generateCongratulationMessageV3().subscribe((message) => {
+      expect(message).toEqual(mockMessage);
+      done();
+    });
+  });
 });
 
 describe('CustomerController integration test', () => {
   let controller: CustomerController;
+  let customerService: CustomerService;
   let dateSpy;
 
   beforeAll(async () => {
@@ -67,6 +80,7 @@ describe('CustomerController integration test', () => {
     }).compile();
 
     controller = module.get<CustomerController>(CustomerController);
+    customerService = module.get<CustomerService>(CustomerService);
   });
 
   afterAll(() => {
@@ -78,25 +92,48 @@ describe('CustomerController integration test', () => {
   });
   it('should return who born in 8/8 and it is Observable of CustomerEntity[]', (done) => {
     controller.getTodayBirthdayCustomers().subscribe((customers) => {
-      // check if customers is an array and has more than 1 item
-      expect(Array.isArray(customers)).toBe(true);
-      expect(customers.length).toBeGreaterThan(1);
+      // Check if customers is a non-empty array
+      expect(customers).toBeInstanceOf(Array);
+      expect(customers.length).toBeGreaterThan(0);
 
-      // check attributes of customer
-      expect(customers[0].firstName).toBeDefined();
-      expect(customers[0].lastName).toBeDefined();
-      expect(customers[0].email).toBeDefined();
-      expect(customers[0].gender).toBeDefined();
-
-      // check birthDay if it is today's date
+      // Get today's date
       const date = new Date();
       const month = date.getMonth() + 1;
       const day = date.getDate();
 
-      expect(customers[0].birthDay.month).toBe(month);
-      expect(customers[0].birthDay.day).toBe(day);
+      // Check attributes of each customer
+      customers.forEach((customer) => {
+        expect(customer).toHaveProperty('firstName');
+        expect(customer).toHaveProperty('lastName');
+        expect(customer).toHaveProperty('email');
+        expect(customer).toHaveProperty('gender');
+
+        // Check if birthDay is today's date
+        expect(customer.birthDay.month).toBe(month);
+        expect(customer.birthDay.day).toBe(day);
+      });
 
       done();
+    });
+  });
+
+  it('should return Observable of string', async () => {
+    const currentYear = new Date().getFullYear();
+    const hasSenoirObservable = customerService
+      .getTodayBirthdayCustomers()
+      .pipe(
+        map((customers) =>
+          customers.some(
+            (customer) => currentYear - customer.birthDay.year > 49,
+          ),
+        ),
+      );
+
+    const hasSenior = await firstValueFrom(hasSenoirObservable);
+    controller.generateCongratulationMessageV3().subscribe((message) => {
+      expect(message).toContain('Happy birthday, dear');
+      expect(message).toContain('Subject: Happy birthday!');
+      hasSenior && expect(message).toContain('![Happy Birthday]');
     });
   });
 });

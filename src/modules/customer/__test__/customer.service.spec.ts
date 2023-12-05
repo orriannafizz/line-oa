@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CustomerService } from '../customer.service';
 import { PrismaService } from '@/shared/prisma.service';
 import { customerStubs } from './stubs';
+import { of } from 'rxjs';
 
 describe('CustomerService', () => {
   let service: CustomerService;
@@ -46,6 +47,25 @@ describe('CustomerService', () => {
     service.getTodayBirthdayCustomers().subscribe({
       next: (customers) => {
         expect(customers).toEqual([]);
+        done();
+      },
+      error: done,
+    });
+  });
+
+  it('should generate congratulation messages for today birthday customers', (done) => {
+    jest
+      .spyOn(service, 'getTodayBirthdayCustomers')
+      .mockReturnValue(of(customerStubs));
+
+    service.generateCongratulationMessageV3().subscribe({
+      next: (message) => {
+        expect(message).toContain('Happy birthday, dear `');
+        expect(message).toContain('Subject: Happy birthday!');
+        expect(message).toContain('![Happy Birthday]');
+        expect(message).toContain(
+          'https://tonsofthanks.com/wp-content/uploads/2023/08/Hot-Dog-Funny-Birthday-Meme.jpg',
+        );
         done();
       },
       error: done,

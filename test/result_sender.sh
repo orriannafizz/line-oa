@@ -1,17 +1,9 @@
-# Global Variable
-FILE_NAME="test/result.json"
-echo $BAREAR_AUTH
-echo $USER_ID
 echo "Sending test results to Line..."
-echo $COMMIT_SHA
-SHORT_SHA=${COMMIT_SHA:0:7}
-echo $BRANCH_NAME #
-echo $AUTH_NAME 
-echo $RUN_ID
-echo $RUN_NUMBER 
-echo $EVENT_NAME 
-echo $WORKFLOW_NAME
+
+# Variable
+FILE_NAME="test/result.json"
 ACTION_URL="https://github.com/$REPOSITORY_NAME/actions/runs/$RUN_ID"
+COMMIT_URL="https://github.com/$REPOSITORY_NAME/commit/$COMMIT_SHA"
 
 # Check if result.json exists
 if [ ! -f "$FILE_NAME" ]; then
@@ -30,15 +22,14 @@ GREEN_COLOR="#4BB543"
 RED_COLOR="#D0342C"  
 
 if [[ "$IS_SUCCESS" == "true" ]]; then
-    TITLE_TEXT="Test Results - Success"
+    TITLE_TEXT="Test - Success 🎉"
+    FAIL_TEXT_COLOR="#55555"
     TITLE_COLOR=$GREEN_COLOR 
 else
-    TITLE_TEXT="Test Results - Failure"
+    TITLE_TEXT="Test - Failure 👎"
+    FAIL_TEXT_COLOR="#D0342C"
     TITLE_COLOR=$RED_COLOR  
 fi
-####### will be replaced by github action #######
-
-#################################################
 
 # Ensure variables BAREAR_AUTH and USER_ID are set
 if [[ -z "${BAREAR_AUTH}" || -z "${USER_ID}" ]]; then
@@ -66,12 +57,10 @@ MESSAGE='{
         "align": "start",
         "margin": "md"
       },
-           {
+      {
         "type": "separator",
         "margin": "md"
       },
-
- 
       {
         "type": "box",
         "layout": "vertical",
@@ -95,7 +84,7 @@ MESSAGE='{
           },
           {
             "type": "text",
-            "text": "Author: '"$AUTH_NAME"'",
+            "text": "Author: '"$AUTHOR_NAME"'",
             "size": "sm",
             "color": "#555555",
             "margin": "sm"
@@ -116,16 +105,16 @@ MESSAGE='{
           },
           {
             "type": "text",
-            "text": "Commit: '"$SHORT_SHA"'",
+            "text": "Commit: '"${COMMIT_SHA:0:7}"'",
             "size": "sm",
             "color": "#555555",
             "margin": "sm"
-          }
+          },
         ]
       },
       {
         "type": "separator",
-        "margin": "xl"
+        "margin": "md"
       },
       {
         "type": "box",
@@ -177,7 +166,7 @@ MESSAGE='{
         "height": "sm",
         "action": {
           "type": "uri",
-          "label": "View Result",
+          "label": "View Job Details",
           "uri": "'"$ACTION_URL"'"
         }
       }

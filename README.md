@@ -2,7 +2,16 @@
 
 ## Overview
 
-<img src="https://nestjs.com/img/logo_text.svg" width="100" height="100" /> <img src="https://prismalens.vercel.app/header/prisma-logo.svg" width="50" height="50" />
+<table>
+  <tr>
+    <td align="center" valign="middle">
+      <img src="https://nestjs.com/img/logo_text.svg" width="100" height="100" />
+    </td>
+    <td align="center" valign="middle">
+      <img src="https://prismalens.vercel.app/header/prisma-logo.svg" width="50" height="50" />
+    </td>
+  </tr>
+</table>
 
 - Implement a api API with NestJS + Prisma
 - Use Github Action to send CI result to line bot

@@ -51,4 +51,46 @@ describe('CustomerService', () => {
       error: done,
     });
   });
+  it('should generate congratulation messages in JSON format', (done) => {
+    jest
+      .spyOn(prismaService.customer, 'findMany')
+      .mockResolvedValue(customerStubs);
+
+    service.generateCongratulationMessageV6Json().subscribe({
+      next: (messages) => {
+        expect(messages.length).toEqual(customerStubs.length);
+        messages.forEach((message, index) => {
+          expect(message.title).toEqual('Subject: Happy birthday!');
+          expect(message.content).toEqual(
+            `Happy birthday, dear ${customerStubs[index].firstName}!`,
+          );
+        });
+        done();
+      },
+      error: done,
+    });
+  });
+
+  it('should generate congratulation messages in XML format', (done) => {
+    jest
+      .spyOn(prismaService.customer, 'findMany')
+      .mockResolvedValue(customerStubs);
+
+    service.generateCongratulationMessagesV6Xml().subscribe({
+      next: (xmlString) => {
+        expect(xmlString).toContain('<root>');
+        customerStubs.forEach((customer) => {
+          expect(xmlString).toContain(
+            `<title>Subject: Happy birthday!</title>`,
+          );
+          expect(xmlString).toContain(
+            `<content>Happy birthday, dear ${customer.firstName}!</content>`,
+          );
+        });
+        expect(xmlString).toContain('</root>');
+        done();
+      },
+      error: done,
+    });
+  });
 });

@@ -18,6 +18,28 @@ describe('CustomerController unit test', () => {
         .mockImplementation(
           (): Observable<CustomerEntity[]> => of(customerStubs),
         ),
+      generateCongratulationMessageV6Json: jest.fn().mockImplementation(
+        (): Observable<BirthdayMessageDTO[]> =>
+          of(
+            customerStubs.map((customer) => ({
+              title: 'Subject: Happy birthday!',
+              content: `Happy birthday, dear ${customer.firstName}!`,
+            })),
+          ),
+      ),
+      generateCongratulationMessagesV6Xml: jest.fn().mockImplementation(
+        (): Observable<string> =>
+          of(
+            `<root>${customerStubs
+              .map((customer) =>
+                `
+              <title>Subject: Happy birthday!</title>
+              <content>Happy birthday, dear ${customer.firstName}!</content>
+            `.trim(),
+              )
+              .join('')}</root>`,
+          ),
+      ),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -59,7 +81,7 @@ describe('CustomerController unit test', () => {
       .spyOn(customerService, 'getTodayBirthdayCustomers')
       .mockReturnValue(of(mockCustomers));
 
-    controller.generateCongratulationMessageV6().subscribe((messages) => {
+    controller.generateCongratulationMessageV6Json().subscribe((messages) => {
       const expectedMessages: BirthdayMessageDTO[] = mockCustomers.map(
         (customer) => ({
           title: 'Subject: Happy birthday!',
@@ -83,29 +105,31 @@ describe('CustomerController unit test', () => {
       .mockReturnValue(of(mockCustomers));
 
     // Call the method to generate XML messages
-    controller.generateCongratulationMessagesXml().subscribe((xmlMessages) => {
-      // Build the expected XML string for each customer
-      const expectedXmlMessages = mockCustomers
-        .map((customer) => {
-          return `
+    controller
+      .generateCongratulationMessagesV6Xml()
+      .subscribe((xmlMessages) => {
+        // Build the expected XML string for each customer
+        const expectedXmlMessages = mockCustomers
+          .map((customer) => {
+            return `
     <title>Subject: Happy birthday!</title>
     <content>Happy birthday, dear ${customer.firstName}!</content>
         `.trim();
-        })
-        .join('');
+          })
+          .join('');
 
-      // Wrap messages with the root element
-      const expectedXml = `<root>${expectedXmlMessages}</root>`;
+        // Wrap messages with the root element
+        const expectedXml = `<root>${expectedXmlMessages}</root>`;
 
-      // Remove all whitespace for the comparison to avoid issues with indentation and line breaks
-      const actualXmlWithoutWhitespace = xmlMessages.replace(/\s/g, '');
-      const expectedXmlWithoutWhitespace = expectedXml.replace(/\s/g, '');
+        // Remove all whitespace for the comparison to avoid issues with indentation and line breaks
+        const actualXmlWithoutWhitespace = xmlMessages.replace(/\s/g, '');
+        const expectedXmlWithoutWhitespace = expectedXml.replace(/\s/g, '');
 
-      // Expect the actual XML to match the expected XML
-      expect(actualXmlWithoutWhitespace).toBe(expectedXmlWithoutWhitespace);
+        // Expect the actual XML to match the expected XML
+        expect(actualXmlWithoutWhitespace).toBe(expectedXmlWithoutWhitespace);
 
-      done();
-    });
+        done();
+      });
   });
 });
 
@@ -154,6 +178,32 @@ describe('CustomerController integration test', () => {
       expect(customers[0].birthDay.day).toBe(day);
 
       done();
+    });
+  });
+  it('should generate congratulation messages in JSON format whose birthday is 8/8', (done) => {
+    controller.generateCongratulationMessageV6Json().subscribe({
+      next: (messages) => {
+        expect(Array.isArray(messages)).toBe(true);
+        messages.forEach((message) => {
+          expect(message.title).toEqual('Subject: Happy birthday!');
+          expect(message.content).toContain('Happy birthday, dear ');
+        });
+        done();
+      },
+      error: done,
+    });
+  });
+
+  it('should generate XML congratulation messages whose birthday is 8/8', (done) => {
+    controller.generateCongratulationMessagesV6Xml().subscribe({
+      next: (xmlString) => {
+        expect(xmlString).toContain('<root>');
+        expect(xmlString).toContain('<title>Subject: Happy birthday!</title>');
+        expect(xmlString).toContain('<content>Happy birthday, dear ');
+        expect(xmlString).toContain('</root>');
+        done();
+      },
+      error: done,
     });
   });
 });

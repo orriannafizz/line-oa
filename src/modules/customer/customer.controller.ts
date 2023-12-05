@@ -14,34 +14,13 @@ export class CustomerController {
   }
 
   @Get('message/version6/json')
-  generateCongratulationMessageV6(): Observable<BirthdayMessageDTO[]> {
-    return this.customerService.getTodayBirthdayCustomers().pipe(
-      map((customers) => {
-        return customers.map((customer) => {
-          return {
-            title: 'Subject: Happy birthday!',
-            content: `Happy birthday, dear ${customer.firstName}!`,
-          };
-        });
-      }),
-    );
+  generateCongratulationMessageV6Json(): Observable<BirthdayMessageDTO[]> {
+    return this.customerService.generateCongratulationMessageV6Json();
   }
 
   @Get('message/version6/xml')
   @Header('Content-Type', 'application/xml')
-  generateCongratulationMessagesXml(): Observable<string> {
-    return this.customerService.getTodayBirthdayCustomers().pipe(
-      map((customers: CustomerEntity[]) => {
-        const xmlMessages = customers.map((customer) => {
-          const messageXml = `
-  <title>Subject: Happy birthday!</title>
-  <content>Happy birthday, dear ${customer.firstName}!</content>
-`;
-          return messageXml.trim();
-        });
-        const allMessagesXml = `<root>\n${xmlMessages.join('\n')}\n</root>`;
-        return allMessagesXml;
-      }),
-    );
+  generateCongratulationMessagesV6Xml(): Observable<string> {
+    return this.customerService.generateCongratulationMessagesV6Xml();
   }
 }

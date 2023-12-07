@@ -5,10 +5,14 @@ import { map, mergeMap, toArray } from 'rxjs/operators';
 import { CustomerEntity } from './entities/customer.entity';
 import { PrismaService } from '@/shared/prisma.service';
 import { BirthdayMessageDTO } from './dto/birthday-message-v6.dto';
+import { XmlService } from '@/shared/xml.service';
 
 @Injectable()
 export class CustomerService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private xmlService: XmlService,
+  ) {}
 
   getTodayBirthdayCustomers(): Observable<CustomerEntity[]> {
     // get today's date
@@ -44,18 +48,23 @@ export class CustomerService {
     );
   }
 
-  generateCongratulationMessagesV6Xml(): Observable<string> {
+  generateCongratulationMessageV6Xml(): Observable<string> {
     return this.getTodayBirthdayCustomers().pipe(
-      map((customers: CustomerEntity[]) => {
-        const xmlMessages = customers.map((customer) => {
-          const messageXml = `
-  <title>Subject: Happy birthday!</title>
-  <content>Happy birthday, dear ${customer.firstName}!</content>
-`;
-          return messageXml.trim();
-        });
-        const allMessagesXml = `<root>\n${xmlMessages.join('\n')}\n</root>`;
-        return allMessagesXml;
+      map((customers) => {
+        const customerMessages = customers.map((customer) => ({
+          title: 'Subject: Happy birthday!',
+          content: `Happy birthday, dear ${customer.firstName}!`,
+        }));
+
+        const xmlObject = {
+          root: customerMessages.map((message) => ({
+            title: message.title,
+            content: message.content,
+          })),
+        };
+
+        const xml = this.xmlService.toXml(xmlObject);
+        return xml;
       }),
     );
   }

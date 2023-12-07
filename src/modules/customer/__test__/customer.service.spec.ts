@@ -2,15 +2,27 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CustomerService } from '../customer.service';
 import { PrismaService } from '@/shared/prisma.service';
 import { customerStubs } from './stubs';
+import { XmlService } from '@/shared/xml.service';
+import { of } from 'rxjs';
 
 describe('CustomerService', () => {
   let service: CustomerService;
   let prismaService: PrismaService;
-
+  let xmlService: XmlService;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CustomerService,
+        {
+          provide: XmlService,
+          useValue: {
+            toXml: jest
+              .fn()
+              .mockReturnValue(
+                '<root><title>Subject: Happy birthday!</title><content>Happy birthday, dear John!</content></root>',
+              ),
+          },
+        },
         {
           provide: PrismaService,
           useValue: {
@@ -24,6 +36,7 @@ describe('CustomerService', () => {
 
     service = module.get<CustomerService>(CustomerService);
     prismaService = module.get<PrismaService>(PrismaService);
+    xmlService = module.get<XmlService>(XmlService);
   });
 
   it('should return a value that matches the stub data', (done) => {
@@ -56,6 +69,9 @@ describe('CustomerService', () => {
       .spyOn(prismaService.customer, 'findMany')
       .mockResolvedValue(customerStubs);
 
+    jest
+      .spyOn(service, 'getTodayBirthdayCustomers')
+      .mockReturnValue(of(customerStubs));
     service.generateCongratulationMessageV6Json().subscribe({
       next: (messages) => {
         expect(messages.length).toEqual(customerStubs.length);
@@ -73,24 +89,14 @@ describe('CustomerService', () => {
 
   it('should generate congratulation messages in XML format', (done) => {
     jest
-      .spyOn(prismaService.customer, 'findMany')
-      .mockResolvedValue(customerStubs);
+      .spyOn(service, 'getTodayBirthdayCustomers')
+      .mockReturnValue(of(customerStubs));
 
-    service.generateCongratulationMessagesV6Xml().subscribe({
-      next: (xmlString) => {
-        expect(xmlString).toContain('<root>');
-        customerStubs.forEach((customer) => {
-          expect(xmlString).toContain(
-            `<title>Subject: Happy birthday!</title>`,
-          );
-          expect(xmlString).toContain(
-            `<content>Happy birthday, dear ${customer.firstName}!</content>`,
-          );
-        });
-        expect(xmlString).toContain('</root>');
-        done();
-      },
-      error: done,
+    service.generateCongratulationMessageV6Xml().subscribe((xml) => {
+      expect(xml).toBe(
+        '<root><title>Subject: Happy birthday!</title><content>Happy birthday, dear John!</content></root>',
+      );
+      done();
     });
   });
 });

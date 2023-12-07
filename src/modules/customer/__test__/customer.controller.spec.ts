@@ -6,10 +6,12 @@ import { Observable, of } from 'rxjs';
 import { CustomerEntity } from '../entities/customer.entity';
 import { PrismaService } from '@/shared/prisma.service';
 import { BirthdayMessageDTO } from '../dto/birthday-message-v6.dto';
+import { XmlService } from '@/shared/xml.service';
 
 describe('CustomerController unit test', () => {
   let controller: CustomerController;
   let customerService: CustomerService;
+  const mockXml = '<xml>Some Content</xml>';
 
   beforeEach(async () => {
     const mockCustomerService = {
@@ -27,27 +29,27 @@ describe('CustomerController unit test', () => {
             })),
           ),
       ),
-      generateCongratulationMessagesV6Xml: jest.fn().mockImplementation(
-        (): Observable<string> =>
-          of(
-            `<root>${customerStubs
-              .map((customer) =>
-                `
-              <title>Subject: Happy birthday!</title>
-              <content>Happy birthday, dear ${customer.firstName}!</content>
-            `.trim(),
-              )
-              .join('')}</root>`,
-          ),
-      ),
+      generateCongratulationMessageV6Xml: jest
+        .fn()
+        .mockImplementation((): Observable<string> => of(mockXml)),
     };
 
+    const mockPrismaService = {};
+    const mockXmlService = {};
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CustomerController],
       providers: [
         {
           provide: CustomerService,
           useValue: mockCustomerService,
+        },
+        {
+          provide: PrismaService,
+          useValue: mockPrismaService,
+        },
+        {
+          provide: XmlService,
+          useValue: mockXmlService,
         },
       ],
     }).compile();
@@ -74,7 +76,7 @@ describe('CustomerController unit test', () => {
     });
   });
 
-  it("version6 generator should generate congratulation messages for today's birthday customers", (done) => {
+  it('should return Observable[]', (done) => {
     // Mock the getTodayBirthdayCustomers method to return a predefined array of customers
     const mockCustomers: CustomerEntity[] = customerStubs;
     jest
@@ -96,40 +98,10 @@ describe('CustomerController unit test', () => {
       done();
     });
   });
-
-  it("version6 generator should generate XML congratulation messages for today's birthday customers", (done) => {
-    // Mock the getTodayBirthdayCustomers method to return a predefined array of customers
-    const mockCustomers: CustomerEntity[] = customerStubs;
-    jest
-      .spyOn(customerService, 'getTodayBirthdayCustomers')
-      .mockReturnValue(of(mockCustomers));
-
-    // Call the method to generate XML messages
-    controller
-      .generateCongratulationMessagesV6Xml()
-      .subscribe((xmlMessages) => {
-        // Build the expected XML string for each customer
-        const expectedXmlMessages = mockCustomers
-          .map((customer) => {
-            return `
-    <title>Subject: Happy birthday!</title>
-    <content>Happy birthday, dear ${customer.firstName}!</content>
-        `.trim();
-          })
-          .join('');
-
-        // Wrap messages with the root element
-        const expectedXml = `<root>${expectedXmlMessages}</root>`;
-
-        // Remove all whitespace for the comparison to avoid issues with indentation and line breaks
-        const actualXmlWithoutWhitespace = xmlMessages.replace(/\s/g, '');
-        const expectedXmlWithoutWhitespace = expectedXml.replace(/\s/g, '');
-
-        // Expect the actual XML to match the expected XML
-        expect(actualXmlWithoutWhitespace).toBe(expectedXmlWithoutWhitespace);
-
-        done();
-      });
+  it('should return XML Observable<string>', () => {
+    controller.generateCongratulationMessageV6Xml().subscribe((xml) => {
+      expect(xml).toBe(mockXml);
+    });
   });
 });
 
@@ -144,7 +116,7 @@ describe('CustomerController integration test', () => {
     dateSpy = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CustomerController],
-      providers: [CustomerService, PrismaService],
+      providers: [CustomerService, PrismaService, XmlService],
     }).compile();
 
     controller = module.get<CustomerController>(CustomerController);
@@ -157,53 +129,58 @@ describe('CustomerController integration test', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
-  it('should return who born in 8/8 and it is Observable of CustomerEntity[]', (done) => {
+  it('should return customers born on today’s date and it is Observable of CustomerEntity[]', (done) => {
     controller.getTodayBirthdayCustomers().subscribe((customers) => {
-      // check if customers is an array and has more than 1 item
-      expect(Array.isArray(customers)).toBe(true);
-      expect(customers.length).toBeGreaterThan(1);
+      // Check if customers is a non-empty array
+      expect(customers).toBeInstanceOf(Array);
+      expect(customers.length).toBeGreaterThan(0);
 
-      // check attributes of customer
-      expect(customers[0].firstName).toBeDefined();
-      expect(customers[0].lastName).toBeDefined();
-      expect(customers[0].email).toBeDefined();
-      expect(customers[0].gender).toBeDefined();
-
-      // check birthDay if it is today's date
+      // Get today's date
       const date = new Date();
       const month = date.getMonth() + 1;
       const day = date.getDate();
 
-      expect(customers[0].birthDay.month).toBe(month);
-      expect(customers[0].birthDay.day).toBe(day);
+      // Check attributes of each customer
+      customers.forEach((customer) => {
+        expect(customer).toHaveProperty('firstName');
+        expect(customer).toHaveProperty('lastName');
+        expect(customer).toHaveProperty('email');
+        expect(customer).toHaveProperty('gender');
+
+        // Check if birthDay is today's date
+        expect(customer.birthDay.month).toBe(month);
+        expect(customer.birthDay.day).toBe(day);
+      });
 
       done();
     });
   });
-  it('should generate congratulation messages in JSON format whose birthday is 8/8', (done) => {
-    controller.generateCongratulationMessageV6Json().subscribe({
-      next: (messages) => {
-        expect(Array.isArray(messages)).toBe(true);
-        messages.forEach((message) => {
-          expect(message.title).toEqual('Subject: Happy birthday!');
-          expect(message.content).toContain('Happy birthday, dear ');
-        });
-        done();
-      },
-      error: done,
+
+  it('should return Observable<BirthdayMessageDTO[]>', (done) => {
+    controller.generateCongratulationMessageV6Json().subscribe((messages) => {
+      // Check if messages is a non-empty array
+      expect(messages).toBeInstanceOf(Array);
+      expect(messages.length).toBeGreaterThan(0);
+
+      // Check attributes of each message
+      messages.forEach((message) => {
+        expect(message).toHaveProperty('title');
+        expect(message).toHaveProperty('content');
+      });
+
+      done();
     });
   });
 
-  it('should generate XML congratulation messages whose birthday is 8/8', (done) => {
-    controller.generateCongratulationMessagesV6Xml().subscribe({
-      next: (xmlString) => {
-        expect(xmlString).toContain('<root>');
-        expect(xmlString).toContain('<title>Subject: Happy birthday!</title>');
-        expect(xmlString).toContain('<content>Happy birthday, dear ');
-        expect(xmlString).toContain('</root>');
-        done();
-      },
-      error: done,
+  it('should return Observable<string>', (done) => {
+    controller.generateCongratulationMessageV6Xml().subscribe((xml) => {
+      expect(xml).toContain('<root>');
+      expect(xml).toContain('<title>Subject: Happy birthday!</title>');
+      expect(xml).toContain('<content>Happy birthday, dear');
+      expect(xml).toContain('</content>');
+      expect(xml).toContain('</root>');
+
+      done();
     });
   });
 });

@@ -179,13 +179,22 @@
 - req:`GET` `http://localhost:3000/api/v0/customer/message/version6/xml`
 - res:
 
-```json
-{
-  "statusCode": 200,
-  "message": "Success",
-  "data": "<root>\n<title>Subject: Happy birthday!</title>\n  <content>Happy birthday, dear Robert!</content>\n<title>Subject: Happy birthday!</title>\n  <content>Happy birthday, dear Sherry!</content>\n</root>",
-  "timestamp": "2023-12-05T10:27:10.670Z"
-}
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+    <title>
+        Subject: Happy birthday!
+    </title>
+    <content>
+        Happy birthday, dear Sherry!
+    </content>
+    <title>
+        Subject: Happy birthday!
+    </title>
+    <content>
+        Happy birthday, dear Peter!
+    </content>
+</root>
 ```
 
 ## Extra Feature

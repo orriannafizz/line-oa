@@ -15,29 +15,31 @@ export class CustomerService {
     const month = date.getMonth() + 1;
     const day = date.getDate();
 
-    return from(
-      this.prisma.customer.findMany({
-        where: {
-          birthDay: {
-            month,
-            day,
-          },
+    const customersPromise = this.prisma.customer.findMany({
+      where: {
+        birthDay: {
+          month,
+          day,
         },
-        include: {
-          birthDay: true,
-        },
-      }),
-    );
+      },
+      include: {
+        birthDay: true,
+      },
+    });
+
+    return from(customersPromise);
   }
 
   generateCongratulationMessageV2(): Observable<string> {
-    return this.getTodayBirthdayCustomers().pipe(
+    const maleMessages =
+      'We offer special discount 20% off for the following items:\nWhite Wine, iPhone X';
+    const femaleMessages =
+      'We offer special discount 50% off for the following items:\nCosmetic, LV Handbags';
+    const titleMessages = 'Subject: Happy birthday!\nHappy birthday, dear ';
+
+    const customer$ = this.getTodayBirthdayCustomers();
+    const messages$ = customer$.pipe(
       map((customers) => {
-        const maleMessages =
-          'We offer special discount 20% off for the following items:\nWhite Wine, iPhone X';
-        const femaleMessages =
-          'We offer special discount 50% off for the following items:\nCosmetic, LV Handbags';
-        const titleMessages = 'Subject: Happy birthday!\nHappy birthday, dear ';
         const messages = customers.map((customer) => {
           return `${titleMessages}${customer.firstName}!\n${
             customer.gender == Gender.MALE ? maleMessages : femaleMessages
@@ -46,5 +48,7 @@ export class CustomerService {
         return messages.join('\n');
       }),
     );
+
+    return messages$;
   }
 }

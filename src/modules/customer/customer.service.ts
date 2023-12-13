@@ -14,24 +14,24 @@ export class CustomerService {
     const date = new Date();
     const month = date.getMonth() + 1;
     const day = date.getDate();
+    const customersPormise = this.prisma.customer.findMany({
+      where: {
+        birthDay: {
+          month,
+          day,
+        },
+      },
+      include: {
+        birthDay: true,
+      },
+    });
 
-    return from(
-      this.prisma.customer.findMany({
-        where: {
-          birthDay: {
-            month,
-            day,
-          },
-        },
-        include: {
-          birthDay: true,
-        },
-      }),
-    );
+    return from(customersPormise);
   }
 
   generateCongratulationMessageV4(): Observable<string> {
-    return this.getTodayBirthdayCustomers().pipe(
+    const customers$ = this.getTodayBirthdayCustomers();
+    const messages$ = customers$.pipe(
       map((customers) => {
         const messages = customers.map((customer) => {
           return `Subject: Happy birthday!\n Happy birthday, dear ${customer.firstName}, ${customer.lastName}!`;
@@ -39,5 +39,7 @@ export class CustomerService {
         return messages.join('\n');
       }),
     );
+
+    return messages$;
   }
 }

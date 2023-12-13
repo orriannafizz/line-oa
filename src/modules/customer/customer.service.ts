@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { from } from 'rxjs';
-import { map, mergeMap, toArray } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { CustomerEntity } from './entities/customer.entity';
 import { PrismaService } from '@/shared/prisma.service';
 
@@ -15,23 +15,24 @@ export class CustomerService {
     const month = date.getMonth() + 1;
     const day = date.getDate();
 
-    return from(
-      this.prisma.customer.findMany({
-        where: {
-          birthDay: {
-            month,
-            day,
-          },
+    const customersPromise = this.prisma.customer.findMany({
+      where: {
+        birthDay: {
+          month,
+          day,
         },
-        include: {
-          birthDay: true,
-        },
-      }),
-    );
+      },
+      include: {
+        birthDay: true,
+      },
+    });
+
+    return from(customersPromise);
   }
 
   generateCongratulationMessageV5(): Observable<string> {
-    return this.getTodayBirthdayCustomers().pipe(
+    const customer$ = this.getTodayBirthdayCustomers();
+    const message$ = customer$.pipe(
       map((customers) => {
         const messages = customers.map((customer) => {
           return `Subject: Happy birthday!\n Happy birthday, dear ${customer.firstName}!`;
@@ -39,5 +40,7 @@ export class CustomerService {
         return messages.join('\n');
       }),
     );
+
+    return message$;
   }
 }

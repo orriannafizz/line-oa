@@ -12,7 +12,7 @@ export class CustomerController {
     return this.customerService.getTodayBirthdayCustomers();
   }
 
-  @Get('message/version1')
+  @Get('message/version5')
   generateCongratulationMessageV5(): Observable<string> {
     return this.customerService.generateCongratulationMessageV5();
   }

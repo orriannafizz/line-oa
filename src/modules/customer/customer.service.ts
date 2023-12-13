@@ -20,23 +20,24 @@ export class CustomerService {
     const month = date.getMonth() + 1;
     const day = date.getDate();
 
-    return from(
-      this.prisma.customer.findMany({
-        where: {
-          birthDay: {
-            month,
-            day,
-          },
+    const customersPromise = this.prisma.customer.findMany({
+      where: {
+        birthDay: {
+          month,
+          day,
         },
-        include: {
-          birthDay: true,
-        },
-      }),
-    );
+      },
+      include: {
+        birthDay: true,
+      },
+    });
+
+    return from(customersPromise);
   }
 
   generateCongratulationMessageV6Json(): Observable<BirthdayMessageDTO[]> {
-    return this.getTodayBirthdayCustomers().pipe(
+    const customers$ = this.getTodayBirthdayCustomers();
+    const messages$ = customers$.pipe(
       map((customers) => {
         return customers.map((customer) => {
           return {
@@ -46,10 +47,13 @@ export class CustomerService {
         });
       }),
     );
+
+    return messages$;
   }
 
   generateCongratulationMessageV6Xml(): Observable<string> {
-    return this.getTodayBirthdayCustomers().pipe(
+    const customers$ = this.getTodayBirthdayCustomers();
+    const messages$ = customers$.pipe(
       map((customers) => {
         const customerMessages = customers.map((customer) => ({
           title: 'Subject: Happy birthday!',
@@ -67,5 +71,7 @@ export class CustomerService {
         return xml;
       }),
     );
+
+    return messages$;
   }
 }
